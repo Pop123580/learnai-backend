@@ -6,20 +6,21 @@ dotenv.config();
 
 const app = express();
 
-// ✅ FIXED: Allow Vercel frontend
-
-
-// OR allow all origins (easier for testing)
-// app.use(cors());
+// ✅ FIXED: Allow all origins
 app.use(cors());
-
 app.use(express.json());
 
-// Health Check - Root route
+// Root route
 app.get('/', (req, res) => {
   res.json({
     status: 'ok',
-    message: 'LearnAI Backend is running!'
+    message: 'LearnAI Backend is running!',
+    endpoints: [
+      '/api/chat/ask',
+      '/api/summarizer',
+      '/api/study-plan',
+      '/api/exam-prep'
+    ]
   });
 });
 
@@ -45,12 +46,7 @@ app.get('/api/health', (req, res) => {
 
 // ✅ FIXED: Use Render's PORT
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log('');
-  console.log('==========================================');
-  console.log('   LearnAI Backend Server Running!');
-  console.log('==========================================');
-  console.log('');
-  console.log('   URL: http://localhost:' + PORT);
-  console.log('');
+  console.log('LearnAI Backend running on port ' + PORT);
 });

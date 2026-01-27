@@ -34,7 +34,7 @@ router.post('/ask', async (req, res) => {
       headers: {
         'Authorization': 'Bearer ' + process.env.OPENROUTER_API_KEY,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:3000',
+        'HTTP-Referer': 'https://learnai-backend-1.onrender.com',
         'X-Title': 'LearnAI'
       },
       body: JSON.stringify({
