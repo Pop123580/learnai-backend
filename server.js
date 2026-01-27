@@ -6,11 +6,22 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
+// ✅ FIXED: Allow Vercel frontend
+
+
+// OR allow all origins (easier for testing)
+// app.use(cors());
+app.use(cors());
+
 app.use(express.json());
+
+// Health Check - Root route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'LearnAI Backend is running!'
+  });
+});
 
 // Import Routes
 const chatbotRoutes = require('./src/routes/chatbotRoutes');
@@ -26,14 +37,14 @@ app.use('/api/exam-prep', examPrepRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     message: 'LearnAI Backend is running!'
   });
 });
 
-const PORT = 5000;
-
+// ✅ FIXED: Use Render's PORT
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log('');
   console.log('==========================================');
