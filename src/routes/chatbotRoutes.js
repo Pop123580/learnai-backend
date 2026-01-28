@@ -12,18 +12,43 @@ router.post('/ask', async (req, res) => {
     }
 
     if (!process.env.OPENROUTER_API_KEY) {
-      return res.status(500).json({ 
-        success: false, 
-        message: 'API key not configured' 
+      return res.status(500).json({
+        success: false,
+        message: 'API key not configured'
       });
     }
 
     let history = chatSessions.get(sessionId) || [];
 
+    // Strong language instruction for Indian languages
+    const systemPrompt = `You are LearnAI, a helpful educational assistant for Indian students.
+
+CRITICAL INSTRUCTION - LANGUAGE REQUIREMENT:
+You MUST respond ONLY in ${language}. 
+- If the language is Hindi, respond in Hindi (हिंदी में जवाब दें)
+- If the language is Bengali, respond in Bengali (বাংলায় উত্তর দিন)
+- If the language is Tamil, respond in Tamil (தமிழில் பதிலளிக்கவும்)
+- If the language is Telugu, respond in Telugu (తెలుగులో సమాధానం ఇవ్వండి)
+- If the language is Marathi, respond in Marathi (मराठीत उत्तर द्या)
+- If the language is Gujarati, respond in Gujarati (ગુજરાતીમાં જવાબ આપો)
+- If the language is Kannada, respond in Kannada (ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರಿಸಿ)
+- If the language is Malayalam, respond in Malayalam (മലയാളത്തിൽ മറുപടി നൽകുക)
+- If the language is Punjabi, respond in Punjabi (ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ)
+- If the language is Odia, respond in Odia (ଓଡ଼ିଆରେ ଉତ୍ତର ଦିଅନ୍ତୁ)
+- If the language is Urdu, respond in Urdu (اردو میں جواب دیں)
+- If the language is Assamese, respond in Assamese (অসমীয়াত উত্তৰ দিয়ক)
+- For any other Indian language, respond in that language only.
+- Only use English if specifically asked or if language is set to English.
+
+DO NOT respond in English unless the selected language is English.
+Your entire response must be in ${language}.
+
+Be friendly, educational, and helpful. Explain concepts clearly for students.`;
+
     const messages = [
-      { 
-        role: 'system', 
-        content: 'You are LearnAI, a helpful educational assistant. Respond in ' + language + '. Be friendly and educational.'
+      {
+        role: 'system',
+        content: systemPrompt
       },
       ...history.slice(-10),
       { role: 'user', content: message }
